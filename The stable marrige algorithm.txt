@@ -1,0 +1,69 @@
+Ques )The stable marriage problem is defined as follows:
+
+Suppose you have N men and N women, and each person has ranked their prospective opposite-sex partners in order of preference.
+
+For example, if N = 3, the input could be something like this:
+
+guy_preferences = {
+    'andrew': ['caroline', 'abigail', 'betty'],
+    'bill': ['caroline', 'betty', 'abigail'],
+    'chester': ['betty', 'caroline', 'abigail'],
+}
+
+gal_preferences = {
+    'abigail': ['andrew', 'bill', 'chester'],
+    'betty': ['bill', 'andrew', 'chester'],
+    'caroline': ['bill', 'chester', 'andrew']
+}
+Write an algorithm that pairs the men and women together in such a way that no two people of opposite sex would both rather be with each other than with their current partners.
+
+
+
+function stableMarriage(guyPreferences, galPreferences) {
+    const men = Object.keys(guyPreferences);
+    const women = Object.keys(galPreferences);
+    
+    const menEngaged = {};
+    const womenEngaged = {};
+    const menProposals = {};
+    men.forEach(man => menProposals[man] = 0);
+
+    while (Object.keys(menProposals).length > 0) {
+        const man = Object.keys(menProposals)[0];
+        const woman = guyPreferences[man][menProposals[man]];
+        menProposals[man]++;
+
+        if (!womenEngaged[woman]) {
+            menEngaged[man] = woman;
+            womenEngaged[woman] = man;
+            delete menProposals[man];
+        } else {
+            const currentPartner = womenEngaged[woman];
+            if (galPreferences[woman].indexOf(man) < galPreferences[woman].indexOf(currentPartner)) {
+                menEngaged[man] = woman;
+                womenEngaged[woman] = man;
+                delete menProposals[man];
+                delete menEngaged[currentPartner];
+            }
+        }
+    }
+
+    return menEngaged;
+}
+
+const guyPreferences = {
+    'andrew': ['caroline', 'abigail', 'betty'],
+    'bill': ['caroline', 'betty', 'abigail'],
+    'chester': ['betty', 'caroline', 'abigail'],
+};
+
+const galPreferences = {
+    'abigail': ['andrew', 'bill', 'chester'],
+    'betty': ['bill', 'andrew', 'chester'],
+    'caroline': ['bill', 'chester', 'andrew']
+};
+
+const result = stableMarriage(guyPreferences, galPreferences);
+for (const man in result) {
+    console.log(`${man} is paired with ${result[man]}`);
+}

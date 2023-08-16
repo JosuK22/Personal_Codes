@@ -1,0 +1,31 @@
+Write an algorithm that computes the reversal of a directed graph. For example, if a graph consists of A -> B -> C, it should become A <- B <- C.
+
+
+
+function reverseDirectedGraph(graph) {
+    const reversedGraph = {};
+    
+    // Step 1: Initialize reversed graph nodes
+    for (const node in graph) {
+        reversedGraph[node] = [];
+    }
+    
+    // Step 2: Add reversed edges
+    for (const src in graph) {
+        for (const dest of graph[src]) {
+            reversedGraph[dest].push(src);
+        }
+    }
+    
+    return reversedGraph;
+}
+
+// Example directed graph
+const originalGraph = {
+    'A': ['B'],
+    'B': ['C'],
+    'C': []
+};
+
+const reversedGraph = reverseDirectedGraph(originalGraph);
+console.log(reversedGraph);
